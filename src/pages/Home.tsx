@@ -38,7 +38,6 @@ const Home = () => {
   return (
     <div className="relative min-h-screen text-slate-200 font-sans selection:bg-blue-500/30">
       <Background theme="dark" />
-
       <Header />
 
       <main className="container mx-auto px-6 pt-32">
