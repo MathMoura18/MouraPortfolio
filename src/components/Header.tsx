@@ -1,22 +1,12 @@
 import { Link } from "react-router-dom";
 import { useTranslation } from "react-i18next";
-import { Languages, Menu, X } from "lucide-react";
+import { Menu, X } from "lucide-react";
 import { useState } from "react";
+import { LanguageButton } from "./LanguageButton";
 
 export const Header = () => {
   const [isOpen, setIsOpen] = useState(false);
-  const { t, i18n } = useTranslation();
-
-  const toggleLanguage = () => {
-    const newLang = i18n.language === "pt" ? "en" : "pt";
-    i18n.changeLanguage(newLang);
-  };
-
-  // Define qual bandeira e sigla mostrar com base no idioma OPOSTO ao atual
-  const languageDisplay =
-    i18n.language === "pt"
-      ? { flag: "🇧🇷", label: "PT" }
-      : { flag: "🇺🇸", label: "EN" };
+  const { t } = useTranslation();
 
   const closeMenu = () => setIsOpen(false);
 
@@ -49,23 +39,7 @@ export const Header = () => {
           </Link>
         </div>
 
-        {/* Botão de Idioma com Bandeira */}
-        <button
-          onClick={toggleLanguage}
-          className="flex items-center gap-2 px-3 py-1.5 rounded-full bg-white/5 border border-white/10 hover:border-blue-500/50 hover:bg-blue-500/10 transition-all group shadow-lg cursor-pointer"
-          title={i18n.language === "pt" ? "Português" : "English"}
-        >
-          <Languages
-            size={14}
-            className="text-blue-400 group-hover:rotate-12 transition-transform"
-          />
-          <div className="flex items-center gap-1.5">
-            <span className="text-sm leading-none">{languageDisplay.flag}</span>
-            <span className="text-[10px] font-bold uppercase tracking-widest text-slate-300">
-              {languageDisplay.label}
-            </span>
-          </div>
-        </button>
+        <LanguageButton />
 
         {/* Botão Hamburger (Mobile) */}
         <button
