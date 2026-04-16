@@ -15,8 +15,8 @@ export const Header = () => {
   // Define qual bandeira e sigla mostrar com base no idioma OPOSTO ao atual
   const languageDisplay =
     i18n.language === "pt"
-      ? { flag: "🇺🇸", label: "EN" }
-      : { flag: "🇧🇷", label: "PT" };
+      ? { flag: "🇧🇷", label: "PT" }
+      : { flag: "🇺🇸", label: "EN" };
 
   const closeMenu = () => setIsOpen(false);
 
@@ -53,7 +53,7 @@ export const Header = () => {
         <button
           onClick={toggleLanguage}
           className="flex items-center gap-2 px-3 py-1.5 rounded-full bg-white/5 border border-white/10 hover:border-blue-500/50 hover:bg-blue-500/10 transition-all group shadow-lg cursor-pointer"
-          title={i18n.language === "pt" ? "English" : "Português"}
+          title={i18n.language === "pt" ? "Português" : "English"}
         >
           <Languages
             size={14}
