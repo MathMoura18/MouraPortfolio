@@ -12,28 +12,29 @@ import { LanguageButton } from "../components/LanguageButton";
 const Home = () => {
   const { t } = useTranslation();
 
+  // Projetos estruturados para buscar tradução dinamicamente
   const projects = [
     {
       title: "OpenAIReader",
-      desc: "Interface de chat com IA para extração de informações de documentos carregados.",
+      desc: t("projects.openai.desc"),
       tech: "Python / OpenAI",
       link: "https://github.com/MathMoura18/OpenAIReader",
     },
     {
       title: "NOPReorder",
-      desc: "Ferramenta para otimização de execução em código Assembly RISC-V.",
+      desc: t("projects.nop.desc"),
       tech: "Assembly / Compiladores",
       link: "https://github.com/MathMoura18/NOPReorder",
     },
     {
       title: "CatPetunia",
-      desc: "Site completo e funcional para uma ONG de adoção de gatos.",
+      desc: t("projects.cat.desc"),
       tech: "React / Full-stack",
       link: "https://github.com/MathMoura18/CatPetunia",
     },
     {
       title: "TryToBeatChatGPT",
-      desc: "Minigame de adivinhação de palavras utilizando a API da OpenAI.",
+      desc: t("projects.beat.desc"),
       tech: "JavaScript / IA",
       link: "https://github.com/MathMoura18/TryToBeatChatGPT",
     },
@@ -47,7 +48,6 @@ const Home = () => {
       <main className="container mx-auto px-6 pt-32">
         {/* Hero Section */}
         <section className="flex flex-col items-center text-center mb-32">
-          {/* Avatar com estilização aprimorada */}
           <div className="relative mb-8">
             <div className="absolute inset-0 bg-blue-500/20 blur-3xl rounded-full"></div>
             <img
@@ -65,7 +65,6 @@ const Home = () => {
               </span>
               {t("available")}
             </div>
-
             <LanguageButton />
           </div>
 
@@ -73,8 +72,7 @@ const Home = () => {
             Matheus Moura
           </h1>
           <p className="text-xl md:text-2xl text-slate-400 max-w-7xl leading-relaxed">
-            Desenvolvedor de Software e Acadêmico de Ciência da Computação
-            focado em criar soluções eficientes e inovadoras.
+            {t("hero_subtitle")}
           </p>
 
           <div className="flex gap-4 mt-10">
@@ -107,8 +105,8 @@ const Home = () => {
         <section id="experience" className="grid md:grid-cols-2 gap-12 mb-32">
           <div className="space-y-8">
             <h2 className="text-2xl font-bold flex items-center gap-2 text-white">
-              <Briefcase className="text-blue-400" size={24} /> Experiência
-              Atual
+              <Briefcase className="text-blue-400" size={24} />{" "}
+              {t("experience.title")}
             </h2>
             <div className="bg-slate-900/40 border border-white/5 p-6 rounded-2xl">
               <div className="flex justify-between items-start mb-4">
@@ -118,27 +116,30 @@ const Home = () => {
                   </h3>
                   <p className="text-blue-400">Modallport Sistemas</p>
                 </div>
-                <span className="text-xs text-slate-500">05/2024 — Hoje</span>
+                <span className="text-xs text-slate-500">
+                  {t("experience.date")}
+                </span>
               </div>
               <ul className="text-sm text-slate-400 space-y-2">
-                <li>• Desenvolvimento de sistemas com ASP.NET MVC.</li>
-                <li>• Manutenção de sistemas e escrita de código limpo.</li>
-                <li>• Diagnóstico e solução de problemas de programação.</li>
+                <li>• {t("experience.job_desc.1")}</li>
+                <li>• {t("experience.job_desc.2")}</li>
+                <li>• {t("experience.job_desc.3")}</li>
               </ul>
             </div>
           </div>
 
           <div className="space-y-8">
             <h2 className="text-2xl font-bold flex items-center gap-2 text-white">
-              <GraduationCap className="text-blue-400" size={24} /> Educação
+              <GraduationCap className="text-blue-400" size={24} />{" "}
+              {t("education.title")}
             </h2>
             <div className="bg-slate-900/40 border border-white/5 p-6 rounded-2xl">
               <h3 className="text-lg font-bold text-white">
-                Ciência da Computação
+                {t("education.course")}
               </h3>
               <p className="text-blue-400">UNIVALI</p>
               <p className="text-sm text-slate-500 mt-2">
-                2023 — 2027 (Previsão)
+                {t("education.date")}
               </p>
               <div className="flex gap-2 mt-4 flex-wrap">
                 {[".NET", "Java", "Python", "React", "Assembly"].map(
@@ -159,7 +160,8 @@ const Home = () => {
         {/* Projetos */}
         <section id="projects" className="pb-32">
           <h2 className="text-2xl font-bold flex items-center gap-2 text-white mb-10">
-            <Code2 className="text-blue-400" size={24} /> Projetos Selecionados
+            <Code2 className="text-blue-400" size={24} />{" "}
+            {t("projects.section_title")}
           </h2>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
             {projects.map((project) => (
@@ -190,7 +192,6 @@ const Home = () => {
           </div>
         </section>
       </main>
-
       <Footer />
     </div>
   );

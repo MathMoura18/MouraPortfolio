@@ -1,51 +1,63 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { ExternalLink, Code2, Filter } from "lucide-react";
 import Background from "../components/Background";
 import { Header } from "../components/Header";
 import { Footer } from "../components/Footer";
+import { useTranslation } from "react-i18next";
 
 const Projects = () => {
+  const { t } = useTranslation();
   const [filter, setFilter] = useState("Todos");
+  const [animate, setAnimate] = useState(true);
+
+  // Efeito para disparar a animação toda vez que o filtro mudar
+  useEffect(() => {
+    setAnimate(false);
+    const timer = setTimeout(() => setAnimate(true), 10);
+    return () => clearTimeout(timer);
+  }, [filter]);
 
   const allProjects = [
     {
       title: "OpenAIReader",
-      desc: "Interface de chat com IA para extração de informações de documentos carregados.",
+      desc: t("projects.openai.desc"),
       tech: ["Python", "OpenAI"],
       category: "IA",
       link: "https://github.com/MathMoura18/OpenAIReader",
     },
     {
       title: "NOPReorder",
-      desc: "Ferramenta para otimização de execução em código Assembly RISC-V.",
+      desc: t("projects.nop.desc"),
       tech: ["Assembly", "C"],
       category: "Compiladores",
       link: "https://github.com/MathMoura18/NOPReorder",
     },
     {
       title: "CatPetunia",
-      desc: "Site completo e funcional para uma ONG de adoção de gatos.",
+      desc: t("projects.cat.desc"),
       tech: ["React", "Node.js", "Tailwind"],
       category: "Web",
       link: "https://github.com/MathMoura18/CatPetunia",
     },
     {
       title: "TryToBeatChatGPT",
-      desc: "Minigame de adivinhação de palavras utilizando a API da OpenAI.",
+      desc: t("projects.beat.desc"),
       tech: ["JavaScript", "OpenAI"],
       category: "IA",
       link: "https://github.com/MathMoura18/TryToBeatChatGPT",
     },
     {
       title: "AWS Univali Portal",
-      desc: "Configuração e deploy de portal acadêmico utilizando serviços AWS.",
+      desc: t(
+        "projects.aws.desc",
+        "Configuração e deploy de portal acadêmico utilizando serviços AWS.",
+      ),
       tech: ["Cloud", "AWS", "Vite"],
       category: "Infra",
       link: "#",
     },
   ];
 
-  // Filtros criativos: Mistura de Categorias e Techs principais
   const filterOptions = [
     "Todos",
     "IA",
@@ -70,11 +82,11 @@ const Projects = () => {
       <main className="container mx-auto px-6 pt-32 pb-20">
         <header className="mb-16">
           <h1 className="text-4xl md:text-6xl font-bold text-white mb-4 tracking-tight">
-            Projetos<span className="text-blue-500">.</span>
+            {t("projects_page.title")}
+            <span className="text-blue-500">.</span>
           </h1>
           <p className="text-slate-400 text-lg max-w-2xl">
-            Uma coleção de experimentos, trabalhos acadêmicos e soluções reais
-            desenvolvidas durante minha jornada em Ciência da Computação.
+            {t("projects_page.subtitle")}
           </p>
         </header>
 
@@ -82,7 +94,7 @@ const Projects = () => {
         <div className="flex flex-col md:flex-row md:items-center justify-between gap-6 mb-12">
           <div className="flex items-center gap-2 text-sm text-slate-400">
             <Filter size={16} className="text-blue-500" />
-            <span>Filtrar por:</span>
+            <span>{t("projects_page.filter_by")}</span>
           </div>
 
           <div className="flex flex-wrap gap-2">
@@ -96,17 +108,20 @@ const Projects = () => {
                     : "bg-slate-900/40 border-white/5 text-slate-400 hover:border-white/20 cursor-pointer"
                 }`}
               >
-                {option}
+                {option === "Todos" ? t("projects_page.all") : option}
               </button>
             ))}
           </div>
         </div>
 
-        {/* Grid de Projetos */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-          {filteredProjects.map((project) => (
+        {/* Grid de Projetos com Animação */}
+        <div
+          className={`grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 transition-all duration-500 ${animate ? "opacity-100 translate-y-0" : "opacity-0 translate-y-4"}`}
+        >
+          {filteredProjects.map((project, index) => (
             <div
               key={project.title}
+              style={{ transitionDelay: `${index * 50}ms` }} // Efeito cascata
               className="group relative flex flex-col bg-slate-900/30 border border-white/5 p-6 rounded-3xl hover:bg-slate-800/40 hover:border-blue-500/30 transition-all duration-500"
             >
               <div className="flex justify-between items-start mb-6">
@@ -132,12 +147,12 @@ const Projects = () => {
               </p>
 
               <div className="flex flex-wrap gap-2 mt-auto">
-                {project.tech.map((t) => (
+                {project.tech.map((techName) => (
                   <span
-                    key={t}
+                    key={techName}
                     className="text-[10px] uppercase tracking-wider font-semibold px-2.5 py-1 rounded-md bg-slate-950/50 text-blue-400/80 border border-blue-500/10"
                   >
-                    {t}
+                    {techName}
                   </span>
                 ))}
               </div>
@@ -145,12 +160,9 @@ const Projects = () => {
           ))}
         </div>
 
-        {/* Feedback caso não encontre projetos no filtro */}
         {filteredProjects.length === 0 && (
           <div className="text-center py-20">
-            <p className="text-slate-500">
-              Nenhum projeto encontrado nesta categoria.
-            </p>
+            <p className="text-slate-500">{t("projects_page.no_results")}</p>
           </div>
         )}
       </main>
