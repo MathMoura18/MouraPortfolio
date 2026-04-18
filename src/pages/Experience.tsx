@@ -2,8 +2,6 @@ import { useState, useEffect } from "react";
 import {
   Briefcase,
   GraduationCap,
-  Calendar,
-  MapPin,
   ChevronDown,
   ExternalLink,
   Code2,
@@ -24,7 +22,7 @@ const Experience = () => {
     setAnimate(true);
   }, []);
 
-  const toggleExpand = (index) => {
+  const toggleExpand = (index: any) => {
     setExpandedIndex(expandedIndex === index ? null : index);
   };
 
@@ -156,11 +154,7 @@ const Experience = () => {
                         {/* Link para o seu GitHub ou Projetos */}
                         {isModallportCard ? null : (
                           <a
-                            href={
-                              isModallportCard
-                                ? null
-                                : t("univali_info.my_studies.github_link")
-                            }
+                            href={t("univali_info.my_studies.github_link")}
                             target="_blank"
                             rel="noopener noreferrer"
                             className="mt-6 inline-flex items-center justify-center gap-2 px-4 py-2 rounded-full bg-slate-900/50 border border-white/5 text-slate-300 text-xs font-bold hover:border-blue-500/40 hover:text-blue-400 transition-all duration-300"
