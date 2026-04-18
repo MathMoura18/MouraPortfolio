@@ -25,12 +25,12 @@ export const Header = () => {
           <a href="#about" className="hover:text-blue-400 transition-colors">
             {t("nav.about", "Sobre")}
           </a>
-          <a
-            href="#experience"
+          <Link
+            to="/experience"
             className="hover:text-blue-400 transition-colors"
           >
             {t("nav.experience", "Experiência")}
-          </a>
+          </Link>
           <Link
             to="/projects"
             className="hover:text-blue-400 transition-colors"
