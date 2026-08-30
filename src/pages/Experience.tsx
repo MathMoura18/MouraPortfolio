@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import {
   Briefcase,
   GraduationCap,
@@ -15,14 +15,9 @@ import LogoUnivali from "../assets/Univali.jpg";
 
 const Experience = () => {
   const { t } = useTranslation();
-  const [animate, setAnimate] = useState(false);
-  const [expandedIndex, setExpandedIndex] = useState(null);
+  const [expandedIndex, setExpandedIndex] = useState<number | null>(0);
 
-  useEffect(() => {
-    setAnimate(true);
-  }, []);
-
-  const toggleExpand = (index: any) => {
+  const toggleExpand = (index: number) => {
     setExpandedIndex(expandedIndex === index ? null : index);
   };
 
@@ -78,9 +73,7 @@ const Experience = () => {
           </p>
         </header>
 
-        <div
-          className={`space-y-6 transition-all duration-700 ${animate ? "opacity-100 translate-y-0" : "opacity-0 translate-y-10"}`}
-        >
+        <div className="space-y-6">
           {experiences.map((item, index) => {
             const isExpanded = expandedIndex === index;
             const isModallportCard =
@@ -89,8 +82,8 @@ const Experience = () => {
             return (
               <div
                 key={index}
-                style={{ transitionDelay: `${index * 150}ms` }}
-                className={`group relative bg-slate-900/30 border border-white/5 rounded-3xl transition-all duration-500 cursor-pointer overflow-hidden
+                style={{ animationDelay: `${index * 150}ms` }}
+                className={`animate-rise-in group relative bg-slate-900/30 border border-white/5 rounded-3xl transition-colors duration-500 cursor-pointer overflow-hidden
                   ${isExpanded ? "bg-slate-800/50 border-blue-500/40" : "hover:bg-slate-800/40 hover:border-white/20"}`}
                 onClick={() => toggleExpand(index)}
               >
@@ -113,7 +106,10 @@ const Experience = () => {
                         {item.role}
                       </h3>
                       <p className="text-slate-400 font-medium text-sm md:text-base">
-                        {item.company}
+                        {item.company} · {item.location}
+                      </p>
+                      <p className="md:hidden text-xs text-slate-500 font-mono mt-1">
+                        {item.period}
                       </p>
                     </div>
                   </div>
@@ -134,6 +130,18 @@ const Experience = () => {
                   className={`transition-all duration-500 ease-in-out px-6 md:px-8 overflow-hidden ${isExpanded ? "max-h-[1000px] pb-8 opacity-100" : "max-h-0 opacity-0"}`}
                 >
                   <div className="pt-6 border-t border-white/5">
+                    <ul className="mb-8 space-y-2">
+                      {item.description.map((line) => (
+                        <li
+                          key={line}
+                          className="flex gap-3 text-sm text-slate-400 leading-relaxed"
+                        >
+                          <span className="mt-2 h-1.5 w-1.5 shrink-0 rounded-full bg-blue-500/70" />
+                          {line}
+                        </li>
+                      ))}
+                    </ul>
+
                     {/* Grid de Duas Colunas no Dropdown */}
                     <div className="grid md:grid-cols-2 gap-8 mb-8 items-stretch">
                       {/* LADO ESQUERDO: Suas Responsabilidades / Estudos */}

@@ -1,4 +1,13 @@
-import { ExternalLink, Code2, GraduationCap, Briefcase } from "lucide-react";
+import {
+  ArrowRight,
+  ExternalLink,
+  Code2,
+  GraduationCap,
+  Briefcase,
+  User,
+} from "lucide-react";
+import { useEffect } from "react";
+import { Link, useLocation } from "react-router-dom";
 import Background from "../components/Background";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faGithub, faLinkedin } from "@fortawesome/free-brands-svg-icons";
@@ -7,37 +16,47 @@ import MyImage from "../assets/me.jpg";
 import { Footer } from "../components/Footer";
 import { Header } from "../components/Header";
 import { useTranslation } from "react-i18next";
-import { LanguageButton } from "../components/LanguageButton";
+import {
+  projects as allProjects,
+  GITHUB_URL,
+  LINKEDIN_URL,
+  EMAIL,
+} from "../data/projects";
+
+const skillGroups = [
+  {
+    key: "skills.backend",
+    items: ["C#", ".NET", "ASP.NET Core", "Node.js"],
+  },
+  {
+    key: "skills.frontend",
+    items: ["React", "React Native", "TypeScript", "Tailwind"],
+  },
+  { key: "skills.data", items: ["SQL Server", "Oracle", "SQL"] },
+  { key: "skills.other", items: ["Java", "Python", "C", "C++", "Assembly"] },
+];
 
 const Home = () => {
   const { t } = useTranslation();
+  const location = useLocation();
 
-  // Projetos estruturados para buscar tradução dinamicamente
-  const projects = [
-    {
-      title: "OpenAIReader",
-      desc: t("projects.openai.desc"),
-      tech: "Python / OpenAI",
-      link: "https://github.com/MathMoura18/OpenAIReader",
-    },
-    {
-      title: "NOPReorder",
-      desc: t("projects.nop.desc"),
-      tech: "Assembly / Compiladores",
-      link: "https://github.com/MathMoura18/NOPReorder",
-    },
-    {
-      title: "CatPetunia",
-      desc: t("projects.cat.desc"),
-      tech: "React / Full-stack",
-      link: "https://github.com/MathMoura18/CatPetunia",
-    },
-    {
-      title: "TryToBeatChatGPT",
-      desc: t("projects.beat.desc"),
-      tech: "JavaScript / IA",
-      link: "https://github.com/MathMoura18/TryToBeatChatGPT",
-    },
+  const scrollTo = (location.state as { scrollTo?: string } | null)?.scrollTo;
+  useEffect(() => {
+    if (!scrollTo) return;
+    // Aguarda o layout final (imagens/fontes) antes de rolar, senão a posição é calculada errada.
+    const timer = setTimeout(() => {
+      document.getElementById(scrollTo)?.scrollIntoView();
+    }, 100);
+    return () => clearTimeout(timer);
+  }, [scrollTo]);
+
+  const featured = allProjects.filter((project) => project.featured);
+
+  const stats = [
+    { value: "2+", label: t("stats.experience") },
+    { value: `${allProjects.length}`, label: t("stats.projects") },
+    { value: "10+", label: t("stats.stack") },
+    { value: "Modallport", label: t("stats.production") },
   ];
 
   return (
@@ -47,7 +66,7 @@ const Home = () => {
 
       <main className="container mx-auto px-6 pt-32">
         {/* Hero Section */}
-        <section className="flex flex-col items-center text-center mb-32">
+        <section className="flex flex-col items-center text-center mb-24">
           <div className="relative mb-8">
             <div className="absolute inset-0 bg-blue-500/20 blur-3xl rounded-full"></div>
             <img
@@ -57,43 +76,63 @@ const Home = () => {
             />
           </div>
 
-          <div className="flex items-stretch gap-4 mb-8">
-            <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-blue-500/10 border border-blue-500/20 text-blue-400 text-xs">
-              <span className="relative flex h-2 w-2">
-                <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-blue-400 opacity-75"></span>
-                <span className="relative inline-flex rounded-full h-2 w-2 bg-blue-500"></span>
-              </span>
-              {t("available")}
-            </div>
-            <LanguageButton />
+          <div className="inline-flex items-center gap-2 px-3 py-1.5 mb-8 rounded-full bg-blue-500/10 border border-blue-500/20 text-blue-400 text-xs">
+            <span className="relative flex h-2 w-2">
+              <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-blue-400 opacity-75"></span>
+              <span className="relative inline-flex rounded-full h-2 w-2 bg-blue-500"></span>
+            </span>
+            {t("available")}
           </div>
 
+          <p className="text-xs md:text-sm uppercase tracking-[0.3em] text-blue-400/80 mb-4">
+            {t("hero_kicker")}
+          </p>
           <h1 className="text-5xl md:text-7xl font-bold text-white mb-6 tracking-tight">
             Matheus Moura
           </h1>
-          <p className="text-xl md:text-2xl text-slate-400 max-w-7xl leading-relaxed">
+          <p className="text-lg md:text-xl text-slate-400 max-w-3xl leading-relaxed">
             {t("hero_subtitle")}
           </p>
 
-          <div className="flex gap-4 mt-10">
+          <div className="flex flex-wrap justify-center gap-3 mt-10">
             <a
-              href="https://github.com/MathMoura18"
+              href={`mailto:${EMAIL}`}
+              className="inline-flex items-center gap-2 px-6 py-3 rounded-full bg-blue-500 text-white text-sm font-semibold hover:bg-blue-400 transition-colors"
+            >
+              {t("cta.contact")}
+              <ArrowRight size={16} />
+            </a>
+            <Link
+              to="/projects"
+              className="inline-flex items-center gap-2 px-6 py-3 rounded-full bg-slate-900/50 border border-white/10 text-slate-200 text-sm font-semibold hover:border-blue-500/50 hover:text-blue-400 transition-all"
+            >
+              {t("cta.view_projects")}
+              <Code2 size={16} />
+            </Link>
+          </div>
+
+          <div className="flex gap-4 mt-8">
+            <a
+              href={GITHUB_URL}
               target="_blank"
               rel="noreferrer"
+              aria-label="GitHub"
               className="p-3 bg-slate-800/50 hover:bg-slate-700 rounded-full transition-all border border-white/10"
             >
               <FontAwesomeIcon icon={faGithub} size="xl" />
             </a>
             <a
-              href="https://www.linkedin.com/in/matheus-moura21/"
+              href={LINKEDIN_URL}
               target="_blank"
               rel="noreferrer"
+              aria-label="LinkedIn"
               className="p-3 bg-slate-800/50 hover:bg-slate-700 rounded-full transition-all border border-white/10"
             >
               <FontAwesomeIcon icon={faLinkedin} size="xl" />
             </a>
             <a
-              href="mailto:mathmo.ura242@gmail.com"
+              href={`mailto:${EMAIL}`}
+              aria-label="E-mail"
               className="p-3 bg-slate-800/50 hover:bg-slate-700 rounded-full transition-all border border-white/10"
             >
               <FontAwesomeIcon icon={faEnvelope} size="xl" />
@@ -101,8 +140,62 @@ const Home = () => {
           </div>
         </section>
 
+        {/* Stats */}
+        <section className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-32">
+          {stats.map((stat) => (
+            <div
+              key={stat.label}
+              className="bg-slate-900/40 border border-white/5 rounded-2xl p-6 text-center hover:border-blue-500/30 transition-colors"
+            >
+              <p className="text-2xl md:text-3xl font-bold text-white mb-1">
+                {stat.value}
+              </p>
+              <p className="text-[11px] uppercase tracking-wider text-slate-500">
+                {stat.label}
+              </p>
+            </div>
+          ))}
+        </section>
+
+        {/* Sobre */}
+        <section id="about" className="scroll-mt-28 mb-32">
+          <h2 className="text-2xl font-bold flex items-center gap-2 text-white mb-8">
+            <User className="text-blue-400" size={24} /> {t("about.title")}
+          </h2>
+          <div className="grid md:grid-cols-5 gap-8">
+            <div className="md:col-span-3 space-y-4 text-slate-400 leading-relaxed">
+              <p>{t("about.text_1")}</p>
+              <p>{t("about.text_2")}</p>
+            </div>
+            <div className="md:col-span-2 bg-slate-900/40 border border-white/5 rounded-2xl p-6">
+              <h3 className="text-sm font-bold uppercase tracking-wider text-blue-400 mb-5">
+                {t("about.skills_title")}
+              </h3>
+              <div className="space-y-4">
+                {skillGroups.map((group) => (
+                  <div key={group.key}>
+                    <p className="text-[11px] uppercase tracking-wider text-slate-500 mb-2">
+                      {t(group.key)}
+                    </p>
+                    <div className="flex flex-wrap gap-2">
+                      {group.items.map((item) => (
+                        <span
+                          key={item}
+                          className="text-[10px] px-2 py-1 rounded bg-slate-950/50 text-blue-400/80 border border-blue-500/10"
+                        >
+                          {item}
+                        </span>
+                      ))}
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </div>
+          </div>
+        </section>
+
         {/* Experiência e Educação */}
-        <section id="experience" className="grid md:grid-cols-2 gap-12 mb-32">
+        <section id="experience" className="scroll-mt-28 grid md:grid-cols-2 gap-12 mb-32">
           <div className="space-y-8">
             <h2 className="text-2xl font-bold flex items-center gap-2 text-white">
               <Briefcase className="text-blue-400" size={24} />{" "}
@@ -125,6 +218,13 @@ const Home = () => {
                 <li>• {t("experience.job_desc.2")}</li>
                 <li>• {t("experience.job_desc.3")}</li>
               </ul>
+              <Link
+                to="/experience"
+                className="mt-6 inline-flex items-center gap-2 text-xs font-bold text-blue-400 hover:text-blue-300 transition-colors"
+              >
+                {t("nav.experience")}
+                <ArrowRight size={14} />
+              </Link>
             </div>
           </div>
 
@@ -158,16 +258,31 @@ const Home = () => {
         </section>
 
         {/* Projetos */}
-        <section id="projects" className="pb-32">
-          <h2 className="text-2xl font-bold flex items-center gap-2 text-white mb-10">
-            <Code2 className="text-blue-400" size={24} />{" "}
-            {t("projects.section_title")}
-          </h2>
+        <section id="projects" className="scroll-mt-28 pb-32">
+          <div className="flex flex-col md:flex-row md:items-end justify-between gap-4 mb-10">
+            <div>
+              <h2 className="text-2xl font-bold flex items-center gap-2 text-white mb-2">
+                <Code2 className="text-blue-400" size={24} />{" "}
+                {t("projects.section_title")}
+              </h2>
+              <p className="text-sm text-slate-500 max-w-xl">
+                {t("projects.section_subtitle")}
+              </p>
+            </div>
+            <Link
+              to="/projects"
+              className="inline-flex items-center gap-2 px-4 py-2 rounded-full border border-white/10 text-xs font-bold text-slate-300 hover:border-blue-500/50 hover:text-blue-400 transition-all whitespace-nowrap"
+            >
+              {t("cta.view_all_projects")}
+              <ArrowRight size={14} />
+            </Link>
+          </div>
+
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-            {projects.map((project) => (
+            {featured.map((project) => (
               <a
-                key={project.title}
-                href={project.link}
+                key={project.id}
+                href={project.repo}
                 target="_blank"
                 rel="noopener noreferrer"
                 className="group relative bg-slate-900/30 border border-white/5 p-8 rounded-3xl hover:bg-slate-800/40 hover:border-blue-500/50 transition-all duration-300"
@@ -182,11 +297,18 @@ const Home = () => {
                   />
                 </div>
                 <p className="text-slate-400 text-sm mb-6 leading-relaxed">
-                  {project.desc}
+                  {t(project.descKey)}
                 </p>
-                <span className="text-xs font-mono text-blue-500/80 bg-blue-500/5 px-3 py-1 rounded-full border border-blue-500/10">
-                  {project.tech}
-                </span>
+                <div className="flex flex-wrap gap-2">
+                  {project.tech.map((techName) => (
+                    <span
+                      key={techName}
+                      className="text-xs font-mono text-blue-500/80 bg-blue-500/5 px-3 py-1 rounded-full border border-blue-500/10"
+                    >
+                      {techName}
+                    </span>
+                  ))}
+                </div>
               </a>
             ))}
           </div>

@@ -4,21 +4,21 @@ import { useTranslation } from "react-i18next";
 export const LanguageButton = () => {
   const { i18n } = useTranslation();
 
+  const isPt = i18n.resolvedLanguage === "pt";
+
   const toggleLanguage = () => {
-    const newLang = i18n.language === "pt" ? "en" : "pt";
-    i18n.changeLanguage(newLang);
+    i18n.changeLanguage(isPt ? "en" : "pt");
   };
 
-  const languageDisplay =
-    i18n.language === "pt"
-      ? { flag: "🇧🇷", label: "PT" }
-      : { flag: "🇺🇸", label: "EN" };
+  const languageDisplay = isPt
+    ? { flag: "🇧🇷", label: "PT" }
+    : { flag: "🇺🇸", label: "EN" };
 
   return (
     <button
       onClick={toggleLanguage}
       className="flex items-center gap-2 px-3 py-1.5 rounded-full bg-white/5 border border-white/10 hover:border-blue-500/50 hover:bg-blue-500/10 transition-all group shadow-lg cursor-pointer"
-      title={i18n.language === "pt" ? "Português" : "English"}
+      title={isPt ? "Português" : "English"}
     >
       <Languages
         size={14}
