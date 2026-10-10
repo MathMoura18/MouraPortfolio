@@ -1,151 +1,155 @@
-import React, { useRef, useEffect } from "react";
+import { useEffect, useRef } from "react";
 
-interface BackgroundProps {
-  theme?: "light" | "dark";
-}
+type Particle = {
+  x: number;
+  y: number;
+  vx: number;
+  vy: number;
+  size: number;
+  hue: "indigo" | "cyan";
+};
 
-const Background: React.FC<BackgroundProps> = ({ theme = "dark" }) => {
+const COLORS = {
+  indigo: "129, 140, 248",
+  cyan: "34, 211, 238",
+};
+
+const LINK_DISTANCE = 130;
+const MOUSE_DISTANCE = 180;
+
+const Background = () => {
   const canvasRef = useRef<HTMLCanvasElement>(null);
-  const mouseRef = useRef({ x: -1000, y: -1000, radius: 150 });
 
   useEffect(() => {
     const canvas = canvasRef.current;
-    if (!canvas) return;
+    const ctx = canvas?.getContext("2d");
+    if (!canvas || !ctx) return;
 
-    const ctx = canvas.getContext("2d");
-    if (!ctx) return;
-
-    let animationFrameId: number;
+    const reduceMotion = window.matchMedia(
+      "(prefers-reduced-motion: reduce)",
+    ).matches;
+    const mouse = { x: -9999, y: -9999 };
     let particles: Particle[] = [];
-    
-    // Configurações
-    const particleCount = 100;
-    const isDark = theme === "dark";
-    const color = isDark ? "255, 255, 255" : "0, 0, 0";
+    let width = 0;
+    let height = 0;
+    let frameId = 0;
 
-    const resizeCanvas = () => {
-      canvas.width = window.innerWidth;
-      canvas.height = window.innerHeight;
+    const createParticles = () => {
+      // Densidade proporcional à área da tela, com teto para manter o desempenho.
+      const count = Math.min(90, Math.floor((width * height) / 16000));
+      particles = Array.from({ length: count }, () => ({
+        x: Math.random() * width,
+        y: Math.random() * height,
+        vx: (Math.random() - 0.5) * 0.35,
+        vy: (Math.random() - 0.5) * 0.35,
+        size: Math.random() * 1.6 + 0.6,
+        hue: Math.random() > 0.7 ? "cyan" : "indigo",
+      }));
     };
 
-    class Particle {
-      x: number = 0;
-      y: number = 0;
-      size: number = 0;
-      speedX: number = 0;
-      speedY: number = 0;
-      opacity: number = 0;
+    const resize = () => {
+      const dpr = Math.min(window.devicePixelRatio || 1, 2);
+      width = window.innerWidth;
+      height = window.innerHeight;
+      canvas.width = width * dpr;
+      canvas.height = height * dpr;
+      canvas.style.width = `${width}px`;
+      canvas.style.height = `${height}px`;
+      ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+      createParticles();
+    };
 
-      constructor() {
-        this.reset();
-      }
+    const draw = () => {
+      ctx.clearRect(0, 0, width, height);
 
-      reset() {
-        const canvas = canvasRef.current;
-        if (!canvas) return;
+      for (let i = 0; i < particles.length; i++) {
+        const p = particles[i];
 
-        this.x = Math.random() * canvas.width;
-        this.y = Math.random() * canvas.height;
-        this.size = Math.random() * 2 + 0.5;
-        // Vetor: Direita (positivo) e Cima (negativo)
-        this.speedX = Math.random() * 0.6 + 0.1;
-        this.speedY = (Math.random() * 0.6 + 0.1) * -1;
-        this.opacity = Math.random() * 0.5 + 0.1;
-      }
-
-      update() {
-        this.x += this.speedX;
-        this.y += this.speedY;
-
-        const canvas = canvasRef.current;
-        if (!canvas) return;
-
-        // Loop infinito (se sair da tela, volta pelo lado oposto)
-        if (this.x > canvas.width) this.x = 0;
-        if (this.y < 0) this.y = canvas.height;
-
-        // Interação com Mouse
-        const dx = mouseRef.current.x - this.x;
-        const dy = mouseRef.current.y - this.y;
-        const distance = Math.sqrt(dx * dx + dy * dy);
-
-        if (distance < mouseRef.current.radius) {
-          const force = (mouseRef.current.radius - distance) / mouseRef.current.radius;
-          const directionX = dx / distance;
-          const directionY = dy / distance;
-          
-          // Empurra as partículas suavemente
-          this.x -= directionX * force * 3;
-          this.y -= directionY * force * 3;
+        if (!reduceMotion) {
+          p.x += p.vx;
+          p.y += p.vy;
+          if (p.x < 0 || p.x > width) p.vx *= -1;
+          if (p.y < 0 || p.y > height) p.vy *= -1;
         }
-      }
 
-      draw() {
-        if (!ctx) return;
+        // Conexões entre partículas próximas (constelação)
+        for (let j = i + 1; j < particles.length; j++) {
+          const q = particles[j];
+          const dx = p.x - q.x;
+          const dy = p.y - q.y;
+          const dist = Math.hypot(dx, dy);
+          if (dist < LINK_DISTANCE) {
+            ctx.strokeStyle = `rgba(${COLORS.indigo}, ${0.12 * (1 - dist / LINK_DISTANCE)})`;
+            ctx.lineWidth = 1;
+            ctx.beginPath();
+            ctx.moveTo(p.x, p.y);
+            ctx.lineTo(q.x, q.y);
+            ctx.stroke();
+          }
+        }
+
+        // Conexões com o cursor
+        const mdx = p.x - mouse.x;
+        const mdy = p.y - mouse.y;
+        const mdist = Math.hypot(mdx, mdy);
+        if (mdist < MOUSE_DISTANCE) {
+          ctx.strokeStyle = `rgba(${COLORS.cyan}, ${0.35 * (1 - mdist / MOUSE_DISTANCE)})`;
+          ctx.beginPath();
+          ctx.moveTo(p.x, p.y);
+          ctx.lineTo(mouse.x, mouse.y);
+          ctx.stroke();
+        }
+
         ctx.beginPath();
-        ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2);
-        ctx.fillStyle = `rgba(${color}, ${this.opacity})`;
+        ctx.arc(p.x, p.y, p.size, 0, Math.PI * 2);
+        ctx.fillStyle = `rgba(${COLORS[p.hue]}, 0.7)`;
         ctx.fill();
       }
-    }
 
-    const init = () => {
-      particles = [];
-      for (let i = 0; i < particleCount; i++) {
-        particles.push(new Particle());
-      }
+      if (!reduceMotion) frameId = requestAnimationFrame(draw);
     };
 
-    const animate = () => {
-      ctx.clearRect(0, 0, canvas.width, canvas.height);
-      particles.forEach((p) => {
-        p.update();
-        p.draw();
-      });
-      animationFrameId = requestAnimationFrame(animate);
+    const onMouseMove = (e: MouseEvent) => {
+      mouse.x = e.clientX;
+      mouse.y = e.clientY;
+    };
+    const onMouseLeave = () => {
+      mouse.x = -9999;
+      mouse.y = -9999;
+    };
+    const onResize = () => {
+      resize();
+      if (reduceMotion) draw();
     };
 
-    const handleMouseMove = (e: MouseEvent) => {
-      mouseRef.current.x = e.clientX;
-      mouseRef.current.y = e.clientY;
-    };
+    resize();
+    draw();
 
-    const handleMouseLeave = () => {
-      mouseRef.current.x = -1000;
-      mouseRef.current.y = -1000;
-    };
-
-    window.addEventListener("resize", resizeCanvas);
-    window.addEventListener("mousemove", handleMouseMove);
-    window.addEventListener("mouseleave", handleMouseLeave);
-
-    resizeCanvas();
-    init();
-    animate();
+    window.addEventListener("resize", onResize);
+    window.addEventListener("mousemove", onMouseMove);
+    document.addEventListener("mouseleave", onMouseLeave);
 
     return () => {
-      window.removeEventListener("resize", resizeCanvas);
-      window.removeEventListener("mousemove", handleMouseMove);
-      window.removeEventListener("mouseleave", handleMouseLeave);
-      cancelAnimationFrame(animationFrameId);
+      cancelAnimationFrame(frameId);
+      window.removeEventListener("resize", onResize);
+      window.removeEventListener("mousemove", onMouseMove);
+      document.removeEventListener("mouseleave", onMouseLeave);
     };
-  }, [theme]);
+  }, []);
 
   return (
-    <canvas
-      ref={canvasRef}
-      style={{
-        position: "fixed",
-        top: 0,
-        left: 0,
-        width: "100%",
-        height: "100%",
-        zIndex: -1,
-        pointerEvents: "none", // Permite clicar em elementos abaixo do canvas
-        backgroundColor: theme === "dark" ? "#0f172a" : "#f8fafc",
-        transition: "background-color 0.5s ease",
-      }}
-    />
+    <div
+      aria-hidden="true"
+      className="pointer-events-none fixed inset-0 -z-10 overflow-hidden bg-ink-950"
+    >
+      <div className="aurora aurora-1" />
+      <div className="aurora aurora-2" />
+      <div className="aurora aurora-3" />
+      <div className="absolute inset-0 grid-bg" />
+      <canvas ref={canvasRef} className="absolute inset-0 opacity-70" />
+      {/* Vinheta para dar profundidade às bordas */}
+      <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_center,transparent_40%,rgb(5_7_13/0.85)_100%)]" />
+    </div>
   );
 };
 

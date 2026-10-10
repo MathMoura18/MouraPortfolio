@@ -6,6 +6,52 @@ const resources = {
   pt: {
     translation: {
       available: "Disponível para novos desafios",
+      explore: {
+        kicker: "Explore",
+        title: "Conheça o portfólio",
+        academic: "TCC e trabalhos desenvolvidos na UNIVALI.",
+        professional: "Tempo de mercado, ferramentas e projetos em produção.",
+        projects: "SmartClips, VibeBoard e meus repositórios.",
+        knowledge: "Cursos, livros e a grade do curso com notas.",
+        about: "Hobbies e alguns fatos sobre mim.",
+        more_about: "Mais sobre mim",
+      },
+      hero_greeting: "Olá, eu sou",
+      hero_roles: [
+        "Desenvolvedor Full-stack",
+        "Especialista em .NET & React",
+        "Construtor de sistemas críticos",
+        "Estudante de Ciência da Computação",
+      ],
+      hero_years: "anos construindo software",
+      hero_scroll: "Role para explorar",
+      sections: {
+        about: "Sobre",
+        journey: "Trajetória",
+        work: "Projetos",
+      },
+      journey: {
+        title: "Experiência & Formação",
+        subtitle:
+          "Onde aplico e aprofundo o que sei — no mercado e na universidade.",
+        see_more: "Ver trajetória completa",
+        current: "Atual",
+      },
+      contact: {
+        title_1: "Vamos construir algo",
+        title_2: "juntos?",
+        text: "Estou aberto a oportunidades, projetos freelance e boas conversas sobre tecnologia. Me mande uma mensagem — respondo rápido.",
+        email_button: "Enviar e-mail",
+        copied: "E-mail copiado!",
+      },
+      footer: {
+        tagline:
+          "Desenvolvedor de software construindo sistemas confiáveis com .NET e React.",
+        built: "Feito com React, TypeScript & Tailwind.",
+        back_to_top: "Voltar ao topo",
+        navigate: "Navegação",
+        social: "Redes",
+      },
       hero_kicker: "Desenvolvedor de Software",
       hero_subtitle:
         "Transformo problemas reais em software confiável. Atuo no desenvolvimento de sistemas críticos com .NET e React, e construo projetos próprios em IA, compiladores e aplicações web full-stack.",
@@ -22,6 +68,12 @@ const resources = {
         production: "Sistema em produção",
       },
       nav: {
+        home: "Início",
+        academic: "Acadêmico",
+        professional: "Profissional",
+        knowledge: "Conhecimento",
+        about_me: "Sobre mim",
+        contact: "Contato",
         about: "Sobre",
         experience: "Experiência",
         projects: "Projetos",
@@ -33,6 +85,14 @@ const resources = {
         text_2:
           "Gosto de projetos que unem as duas pontas: da lógica de baixo nível em Assembly e C até interfaces web modernas em React. Nas horas livres, coloco essas ideias em prática em projetos pessoais publicados no GitHub — de ferramentas com IA a sites completos para causas que acredito, como adoção de animais.",
         skills_title: "Stack e ferramentas",
+        heading: "Código confiável, do baixo nível à interface.",
+        currently_title: "Atualmente",
+        currently_work: "Software Developer na Modallport",
+        currently_study: "Ciência da Computação na UNIVALI",
+        focus_title: "Foco",
+        focus_text:
+          "Sistemas críticos, APIs robustas e interfaces que as pessoas gostam de usar.",
+        location_title: "Localização",
       },
       skills: {
         backend: "Backend",
@@ -90,18 +150,25 @@ const resources = {
         },
       },
       projects_page: {
-        title: "Projetos",
+        title: "Projetos pessoais",
         subtitle:
-          "Uma coleção de experimentos, trabalhos acadêmicos e soluções reais desenvolvidas durante minha jornada em Ciência da Computação — todos disponíveis no meu GitHub.",
+          "Produtos que construo por conta própria e uma coleção de experimentos e soluções desenvolvidas durante minha jornada — disponíveis no meu GitHub.",
         filter_by: "Filtrar por:",
         all: "Todos",
         no_results: "Nenhum projeto encontrado nesta categoria.",
         view_repo: "Ver repositório",
+        count_one: "{{count}} projeto",
+        count_other: "{{count}} projetos",
+        featured: "Destaque",
       },
       experience_page: {
         subtitle:
           "Minha trajetória profissional e acadêmica no desenvolvimento de software.",
         current_period: "Maio 2024 — Presente",
+        edu_desc: {
+          1: "Formação sólida em algoritmos, estruturas de dados, compiladores e arquitetura de computadores.",
+          2: "Projetos práticos em C, Assembly RISC-V, Java e computação em nuvem com AWS.",
+        },
       },
       modallport: {
         my_role: {
@@ -134,6 +201,52 @@ const resources = {
   en: {
     translation: {
       available: "Available for new challenges",
+      explore: {
+        kicker: "Explore",
+        title: "Discover the portfolio",
+        academic: "Thesis and coursework from UNIVALI.",
+        professional: "Industry time, tools, and production projects.",
+        projects: "SmartClips, VibeBoard, and my repositories.",
+        knowledge: "Courses, books, and my curriculum with grades.",
+        about: "Hobbies and a few facts about me.",
+        more_about: "More about me",
+      },
+      hero_greeting: "Hi, I'm",
+      hero_roles: [
+        "Full-stack Developer",
+        ".NET & React Specialist",
+        "Critical Systems Builder",
+        "Computer Science Student",
+      ],
+      hero_years: "years building software",
+      hero_scroll: "Scroll to explore",
+      sections: {
+        about: "About",
+        journey: "Journey",
+        work: "Work",
+      },
+      journey: {
+        title: "Experience & Education",
+        subtitle:
+          "Where I apply and deepen what I know — in the industry and at university.",
+        see_more: "See full journey",
+        current: "Current",
+      },
+      contact: {
+        title_1: "Let's build something",
+        title_2: "together?",
+        text: "I'm open to opportunities, freelance projects, and good conversations about technology. Send me a message — I reply fast.",
+        email_button: "Send an e-mail",
+        copied: "E-mail copied!",
+      },
+      footer: {
+        tagline:
+          "Software developer building reliable systems with .NET and React.",
+        built: "Built with React, TypeScript & Tailwind.",
+        back_to_top: "Back to top",
+        navigate: "Navigation",
+        social: "Social",
+      },
       hero_kicker: "Software Developer",
       hero_subtitle:
         "I turn real problems into reliable software. I work on critical systems with .NET and React, and build my own projects in AI, compilers, and full-stack web apps.",
@@ -150,6 +263,12 @@ const resources = {
         production: "System in production",
       },
       nav: {
+        home: "Home",
+        academic: "Academic",
+        professional: "Professional",
+        knowledge: "Knowledge",
+        about_me: "About me",
+        contact: "Contact",
         about: "About",
         experience: "Experience",
         projects: "Projects",
@@ -161,6 +280,14 @@ const resources = {
         text_2:
           "I enjoy projects that connect both ends of the stack: from low-level logic in Assembly and C to modern web interfaces in React. In my free time, I put those ideas into practice through personal projects published on GitHub — from AI-powered tools to full websites for causes I care about, like animal adoption.",
         skills_title: "Stack & tools",
+        heading: "Reliable code, from low-level to interface.",
+        currently_title: "Currently",
+        currently_work: "Software Developer at Modallport",
+        currently_study: "Computer Science at UNIVALI",
+        focus_title: "Focus",
+        focus_text:
+          "Critical systems, robust APIs, and interfaces people enjoy using.",
+        location_title: "Location",
       },
       skills: {
         backend: "Backend",
@@ -218,18 +345,25 @@ const resources = {
         },
       },
       projects_page: {
-        title: "Projects",
+        title: "Personal projects",
         subtitle:
-          "A collection of experiments, academic work, and real-world solutions built during my Computer Science journey — all available on my GitHub.",
+          "Products I build on my own, plus a collection of experiments and solutions from my journey — available on my GitHub.",
         filter_by: "Filter by:",
         all: "All",
         no_results: "No projects found in this category.",
         view_repo: "View repository",
+        count_one: "{{count}} project",
+        count_other: "{{count}} projects",
+        featured: "Featured",
       },
       experience_page: {
         subtitle:
           "My professional and academic journey in software development.",
         current_period: "May 2024 — Present",
+        edu_desc: {
+          1: "Solid foundation in algorithms, data structures, compilers, and computer architecture.",
+          2: "Hands-on projects in C, RISC-V Assembly, Java, and cloud computing with AWS.",
+        },
       },
       modallport: {
         my_role: {
@@ -271,5 +405,12 @@ i18n
       escapeValue: false,
     },
   });
+
+// Mantém o atributo lang do <html> sincronizado (acessibilidade e SEO)
+const syncHtmlLang = (lng) => {
+  document.documentElement.lang = lng?.startsWith("en") ? "en" : "pt-BR";
+};
+syncHtmlLang(i18n.resolvedLanguage);
+i18n.on("languageChanged", syncHtmlLang);
 
 export default i18n;

@@ -1,35 +1,38 @@
-import { Languages } from "lucide-react";
 import { useTranslation } from "react-i18next";
 
 export const LanguageButton = () => {
   const { i18n } = useTranslation();
-
   const isPt = i18n.resolvedLanguage === "pt";
 
-  const toggleLanguage = () => {
-    i18n.changeLanguage(isPt ? "en" : "pt");
-  };
-
-  const languageDisplay = isPt
-    ? { flag: "🇧🇷", label: "PT" }
-    : { flag: "🇺🇸", label: "EN" };
-
   return (
-    <button
-      onClick={toggleLanguage}
-      className="flex items-center gap-2 px-3 py-1.5 rounded-full bg-white/5 border border-white/10 hover:border-blue-500/50 hover:bg-blue-500/10 transition-all group shadow-lg cursor-pointer"
-      title={isPt ? "Português" : "English"}
+    <div
+      role="group"
+      aria-label="Idioma / Language"
+      className="relative flex items-center rounded-full border border-white/10 bg-white/[0.04] p-1 font-mono text-[11px] font-medium"
     >
-      <Languages
-        size={14}
-        className="text-blue-400 group-hover:rotate-12 transition-transform"
+      {/* Indicador deslizante */}
+      <span
+        aria-hidden="true"
+        className={`absolute inset-y-1 left-1 w-[calc(50%-4px)] rounded-full bg-linear-to-r from-indigo-500 to-cyan-500 shadow-md shadow-indigo-500/30 transition-transform duration-300 ${
+          isPt ? "translate-x-0" : "translate-x-full"
+        }`}
       />
-      <div className="flex items-center gap-1.5">
-        <span className="text-sm leading-none">{languageDisplay.flag}</span>
-        <span className="text-[10px] font-bold uppercase tracking-widest text-slate-300">
-          {languageDisplay.label}
-        </span>
-      </div>
-    </button>
+      {(["pt", "en"] as const).map((lng) => {
+        const active = i18n.resolvedLanguage === lng;
+        return (
+          <button
+            key={lng}
+            onClick={() => i18n.changeLanguage(lng)}
+            aria-pressed={active}
+            title={lng === "pt" ? "Português" : "English"}
+            className={`relative z-10 w-9 rounded-full py-1 uppercase tracking-wider transition-colors cursor-pointer ${
+              active ? "text-white" : "text-slate-400 hover:text-white"
+            }`}
+          >
+            {lng}
+          </button>
+        );
+      })}
+    </div>
   );
 };
