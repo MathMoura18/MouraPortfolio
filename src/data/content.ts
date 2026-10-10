@@ -825,8 +825,8 @@ export const facts: Fact[] = [
   {
     value: "🔎",
     label: {
-      pt: "Me considero muito curioso e criativo, principalmente na computação",
-      en: "I consider myself very curious and creative, especially in computing.",
+      pt: "Muito curioso e criativo, principalmente na computação",
+      en: "Very curious and creative, especially in computing.",
     },
   },
 ];
