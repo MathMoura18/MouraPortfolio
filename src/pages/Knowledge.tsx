@@ -129,9 +129,9 @@ const Knowledge = () => {
                       )}
                       <ul className="space-y-3">
                         {semester.subjects.map((subject) => (
-                          <li key={subject.name}>
+                          <li key={subject.name.pt}>
                             <div className="mb-1.5 flex items-baseline justify-between gap-4 text-sm">
-                              <span className="text-slate-300">{subject.name}</span>
+                              <span className="text-slate-300">{l(subject.name)}</span>
                               <span className="font-mono text-xs text-white">
                                 {subject.grade !== undefined
                                   ? subject.grade.toFixed(1)

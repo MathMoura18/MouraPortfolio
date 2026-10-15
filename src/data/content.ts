@@ -709,7 +709,7 @@ export const books: Book[] = [
   },
 ];
 
-export type Subject = { name: string; grade?: number };
+export type Subject = { name: L; grade?: number };
 export type Semester = Pendable & {
   period: number;
   year: string;
@@ -722,68 +722,68 @@ export const curriculum: Semester[] = [
   {
     period: 1,
     year: "2023/1",
-    subjects: [{ name: "Algoritmos e Programação", grade: 6.6 }],
+    subjects: [{ name: { pt: "Algoritmos e Programação", en: "Algorithms and Programming" }, grade: 6.6 }],
   },
   {
     period: 2,
     year: "2023/1 – 2024/2",
     subjects: [
-      { name: "Cálculo I", grade: 7.0 },
-      { name: "Circuitos Digitais", grade: 7.0 },
+      { name: { pt: "Cálculo I", en: "Calculus I" }, grade: 7.0 },
+      { name: { pt: "Circuitos Digitais", en: "Digital Circuits" }, grade: 7.0 },
     ],
   },
   {
     period: 3,
     year: "2024/1 – 2024/2",
     subjects: [
-      { name: "Cálculo II", grade: 6.0 },
-      { name: "Programação Orientada a Objetos", grade: 6.5 },
-      { name: "Estruturas de Dados", grade: 7.0 },
-      { name: "Paradigmas de Programação", grade: 8.0 },
+      { name: { pt: "Cálculo II", en: "Calculus II" }, grade: 6.0 },
+      { name: { pt: "Programação Orientada a Objetos", en: "Object-Oriented Programming" }, grade: 6.5 },
+      { name: { pt: "Estruturas de Dados", en: "Data Structures" }, grade: 7.0 },
+      { name: { pt: "Paradigmas de Programação", en: "Programming Paradigms" }, grade: 8.0 },
     ],
   },
   {
     period: 4,
     year: "2023/2 – 2024/2",
     subjects: [
-      { name: "Banco de Dados", grade: 6.9 },
-      { name: "Programação Web", grade: 8.7 },
-      { name: "Organização de Computadores", grade: 7.0 },
-      { name: "Engenharia de Software I", grade: 7.5 },
+      { name: { pt: "Banco de Dados", en: "Databases" }, grade: 6.9 },
+      { name: { pt: "Programação Web", en: "Web Programming" }, grade: 8.7 },
+      { name: { pt: "Organização de Computadores", en: "Computer Organization" }, grade: 7.0 },
+      { name: { pt: "Engenharia de Software I", en: "Software Engineering I" }, grade: 7.5 },
     ],
   },
   {
     period: 5,
     year: "2025/1",
     subjects: [
-      { name: "Sistemas Operacionais", grade: 6.5 },
-      { name: "Estatística", grade: 7.0 },
-      { name: "Banco de Dados II", grade: 7.5 },
-      { name: "Engenharia de Software II", grade: 9.0 },
-      { name: "Programação para Dispositivos Móveis", grade: 7.0 },
+      { name: { pt: "Sistemas Operacionais", en: "Operating Systems" }, grade: 6.5 },
+      { name: { pt: "Estatística", en: "Statistics" }, grade: 7.0 },
+      { name: { pt: "Banco de Dados II", en: "Databases II" }, grade: 7.5 },
+      { name: { pt: "Engenharia de Software II", en: "Software Engineering II" }, grade: 9.0 },
+      { name: { pt: "Programação para Dispositivos Móveis", en: "Mobile Device Programming" }, grade: 7.0 },
     ],
   },
   {
     period: 6,
     year: "2025/2 – 2026/2",
     subjects: [
-      { name: "Redes de Computadores", grade: 7.0 },
-      { name: "Informática na Educação", grade: 10.0 },
-      { name: "Informática e Sociedade", grade: 7.0 },
-      { name: "Interação Humano-Computador", grade: 8.0 },
-      { name: "Processamento de Imagens", grade: 8.5 },
-      { name: "Linguagens Formais e Autômatos", grade: 6.5 },
+      { name: { pt: "Redes de Computadores", en: "Computer Networks" }, grade: 7.0 },
+      { name: { pt: "Informática na Educação", en: "Computing in Education" }, grade: 10.0 },
+      { name: { pt: "Informática e Sociedade", en: "Computing and Society" }, grade: 7.0 },
+      { name: { pt: "Interação Humano-Computador", en: "Human-Computer Interaction" }, grade: 8.0 },
+      { name: { pt: "Processamento de Imagens", en: "Image Processing" }, grade: 8.5 },
+      { name: { pt: "Linguagens Formais e Autômatos", en: "Formal Languages and Automata" }, grade: 6.5 },
     ],
   },
   {
     period: 7,
     year: "2026/1",
     subjects: [
-      { name: "Grafos", grade: 7.5 },
-      { name: "Computação Gráfica", grade: 6.5 },
-      { name: "Inteligência Artificial", grade: 8.0 },
-      { name: "Redes de Computadores II", grade: 8.0 },
-      { name: "Compiladores", grade: 10.0 },
+      { name: { pt: "Grafos", en: "Graph Theory" }, grade: 7.5 },
+      { name: { pt: "Computação Gráfica", en: "Computer Graphics" }, grade: 6.5 },
+      { name: { pt: "Inteligência Artificial", en: "Artificial Intelligence" }, grade: 8.0 },
+      { name: { pt: "Redes de Computadores II", en: "Computer Networks II" }, grade: 8.0 },
+      { name: { pt: "Compiladores", en: "Compilers" }, grade: 10.0 },
     ],
   },
 ];
