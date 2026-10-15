@@ -616,7 +616,7 @@ export const courses: Course[] = [
 ];
 
 export type Book = Pendable & {
-  title: string;
+  title: L;
   original?: string;
   author: string;
   year: number;
@@ -629,7 +629,7 @@ export type Book = Pendable & {
 
 export const books: Book[] = [
   {
-    title: "Código Limpo",
+    title: { pt: "Código Limpo", en: "Clean Code" },
     cover: capaCodigoLimpo,
     original: "Clean Code",
     author: "Robert C. Martin",
@@ -642,7 +642,7 @@ export const books: Book[] = [
     status: "read",
   },
   {
-    title: "Arquitetura Limpa",
+    title: { pt: "Arquitetura Limpa", en: "Clean Architecture" },
     cover: capaArquiteturaLimpa,
     original: "Clean Architecture",
     author: "Robert C. Martin",
@@ -655,8 +655,12 @@ export const books: Book[] = [
     status: "read",
   },
   {
-    title: "Testes Automatizados de Software: Um guia prático",
+    title: {
+      pt: "Testes Automatizados de Software: Um guia prático",
+      en: "Automated Software Testing: A Practical Guide",
+    },
     cover: capaTestes,
+    original: "Testes Automatizados de Software: Um guia prático",
     author: "Maurício Aniche · Casa do Código (Alura)",
     year: 2015,
     category: { pt: "Qualidade", en: "Quality" },
@@ -667,7 +671,7 @@ export const books: Book[] = [
     status: "read",
   },
   {
-    title: "A Startup Enxuta",
+    title: { pt: "A Startup Enxuta", en: "The Lean Startup" },
     cover: capaStartupEnxuta,
     original: "The Lean Startup",
     author: "Eric Ries",
@@ -680,7 +684,7 @@ export const books: Book[] = [
     status: "read",
   },
   {
-    title: "Lean Inception",
+    title: { pt: "Lean Inception", en: "Lean Inception" },
     cover: capaLeanInception,
     author: "Paulo Caroli",
     year: 2018,
@@ -692,7 +696,7 @@ export const books: Book[] = [
     status: "read",
   },
   {
-    title: "Steve Jobs",
+    title: { pt: "Steve Jobs", en: "Steve Jobs" },
     cover: capaSteveJobs,
     author: "Walter Isaacson",
     year: 2011,
@@ -716,52 +720,71 @@ export type Semester = Pendable & {
 /** Grade curricular com a média final de cada disciplina (0–10). */
 export const curriculum: Semester[] = [
   {
-    period: 3,
-    year: "2024/2",
+    period: 1,
+    year: "2023/1",
+    subjects: [{ name: "Algoritmos e Programação", grade: 6.6 }],
+  },
+  {
+    period: 2,
+    year: "2023/1 – 2024/2",
     subjects: [
-      { name: "Estruturas de Dados", grade: 7.0 },
-      { name: "Programação Orientada a Objetos", grade: 6.5 },
+      { name: "Cálculo I", grade: 7.0 },
+      { name: "Circuitos Digitais", grade: 7.0 },
+    ],
+  },
+  {
+    period: 3,
+    year: "2024/1 – 2024/2",
+    subjects: [
       { name: "Cálculo II", grade: 6.0 },
+      { name: "Programação Orientada a Objetos", grade: 6.5 },
+      { name: "Estruturas de Dados", grade: 7.0 },
+      { name: "Paradigmas de Programação", grade: 8.0 },
     ],
   },
   {
     period: 4,
-    year: "2025/1",
+    year: "2023/2 – 2024/2",
     subjects: [
-      { name: "Sistemas Operacionais", grade: 6.5 },
-      { name: "Banco de Dados II", grade: 7.5 },
-      { name: "Estatística", grade: 7.0 },
-      { name: "Programação para Dispositivos Móveis", grade: 7.0 },
-      { name: "Engenharia de Software II", grade: 9.0 },
+      { name: "Banco de Dados", grade: 6.9 },
+      { name: "Programação Web", grade: 8.7 },
+      { name: "Organização de Computadores", grade: 7.0 },
+      { name: "Engenharia de Software I", grade: 7.5 },
     ],
   },
   {
     period: 5,
-    year: "2025/2",
+    year: "2025/1",
     subjects: [
-      { name: "Processamento de Imagens", grade: 8.5 },
-      { name: "Linguagens Formais e Autômatos", grade: 6.5 },
-      { name: "Redes de Computadores", grade: 7.0 },
-      { name: "Informática na Educação", grade: 10.0 },
+      { name: "Sistemas Operacionais", grade: 6.5 },
+      { name: "Estatística", grade: 7.0 },
+      { name: "Banco de Dados II", grade: 7.5 },
+      { name: "Engenharia de Software II", grade: 9.0 },
+      { name: "Programação para Dispositivos Móveis", grade: 7.0 },
     ],
   },
   {
     period: 6,
-    year: "2026/1",
+    year: "2025/2 – 2026/2",
     subjects: [
-      { name: "Computação Gráfica", grade: 6.5 },
-      { name: "Compiladores", grade: 10.0 },
-      { name: "Redes de Computadores II", grade: 8.0 },
-      { name: "Grafos", grade: 7.5 },
+      { name: "Redes de Computadores", grade: 7.0 },
+      { name: "Informática na Educação", grade: 10.0 },
       { name: "Informática e Sociedade", grade: 7.0 },
-      { name: "Inteligência Artificial", grade: 8.0 },
+      { name: "Interação Humano-Computador", grade: 8.0 },
+      { name: "Processamento de Imagens", grade: 8.5 },
+      { name: "Linguagens Formais e Autômatos", grade: 6.5 },
     ],
   },
   {
     period: 7,
-    year: "2026/2",
-    current: true,
-    subjects: [],
+    year: "2026/1",
+    subjects: [
+      { name: "Grafos", grade: 7.5 },
+      { name: "Computação Gráfica", grade: 6.5 },
+      { name: "Inteligência Artificial", grade: 8.0 },
+      { name: "Redes de Computadores II", grade: 8.0 },
+      { name: "Compiladores", grade: 10.0 },
+    ],
   },
 ];
 

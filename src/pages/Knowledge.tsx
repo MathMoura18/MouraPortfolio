@@ -252,12 +252,12 @@ const Knowledge = () => {
             />
             <div className="grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
               {bookList.map((book, i) => (
-                <Reveal key={book.title} delay={(i % 3) * 100}>
+                <Reveal key={l(book.title)} delay={(i % 3) * 100}>
                   <div className={`group flex h-full gap-5 rounded-3xl border border-white/[0.08] bg-ink-900/50 p-5 ${pendingClass(book)}`}>
                     {book.cover ? (
                       <img
                         src={book.cover}
-                        alt={`Capa do livro ${book.title}`}
+                        alt={`${l({ pt: "Capa do livro", en: "Book cover:" })} ${l(book.title)}`}
                         loading="lazy"
                         className="h-auto w-24 shrink-0 self-start rounded-l-sm rounded-r-md shadow-xl shadow-black/40 ring-1 ring-white/10 transition-transform duration-500 group-hover:-translate-y-1 group-hover:-rotate-3"
                       />
@@ -267,7 +267,7 @@ const Knowledge = () => {
                         className={`relative flex h-36 w-24 shrink-0 flex-col justify-between overflow-hidden rounded-l-sm rounded-r-lg bg-linear-to-br ${coverColors[i % coverColors.length]} p-2.5 shadow-xl shadow-black/40 transition-transform duration-500 group-hover:-translate-y-1 group-hover:-rotate-3`}
                       >
                         <span className="absolute inset-y-0 left-1.5 w-px bg-white/25" />
-                        <p className="pl-1.5 font-display text-[11px] font-bold leading-tight text-white">{book.title}</p>
+                        <p className="pl-1.5 font-display text-[11px] font-bold leading-tight text-white">{l(book.title)}</p>
                         <p className="pl-1.5 text-[8px] uppercase tracking-wider text-white/70">{book.author.split(" \u00b7 ")[0]}</p>
                       </div>
                     )}
@@ -285,10 +285,10 @@ const Knowledge = () => {
                         </span>
                         <DraftBadge item={book} />
                       </div>
-                      <h3 className="font-display font-semibold leading-snug text-white">{book.title}</h3>
+                      <h3 className="font-display font-semibold leading-snug text-white">{l(book.title)}</h3>
                       <p className="text-xs text-slate-500">
                         {book.author} · {book.year}
-                        {book.original && <span className="italic"> · {book.original}</span>}
+                        {book.original && book.original !== l(book.title) && <span className="italic"> · {book.original}</span>}
                       </p>
                       <p className="mt-3 text-sm leading-relaxed text-slate-400">{l(book.takeaway)}</p>
                     </div>
