@@ -1,13 +1,16 @@
 import { useState } from "react";
 import {
+  AlertTriangle,
   BrainCircuit,
+  Check,
   ChevronRight,
-  Database,
-  Flame,
-  Image,
   Info,
-  ScanSearch,
-  SlidersHorizontal,
+  Layers,
+  ScanText,
+  Scale,
+  ShieldCheck,
+  UserCheck,
+  X,
   type LucideIcon,
 } from "lucide-react";
 import { Reveal } from "./Reveal";
@@ -16,11 +19,10 @@ import { useLocalize } from "../utils/localize";
 import { tcc, type Layered, type PipelineStep } from "../data/tcc";
 
 const stepIcons: Record<PipelineStep["id"], LucideIcon> = {
-  input: Image,
-  preprocess: SlidersHorizontal,
-  vit: BrainCircuit,
-  classify: ScanSearch,
-  explain: Flame,
+  ai: ScanText,
+  rules: ShieldCheck,
+  reconcile: Layers,
+  human: UserCheck,
 };
 
 /** Bloco técnico que abre/fecha suavemente (grid-rows anima a altura real). */
@@ -49,120 +51,62 @@ const LayeredText = ({ text, tech, className = "" }: { text: Layered; tech: bool
   );
 };
 
-/** Intensidade (0–1) de uma "mamografia" sintética: tecido em gradiente com um ponto mais denso. */
-const pixel = (x: number, y: number, size: number) => {
-  const nx = x / (size - 1);
-  const ny = y / (size - 1);
-  const tissue = Math.max(0, 1 - Math.hypot(nx * 1.1, (ny - 0.5) * 1.4)) * 0.55;
-  const spot = Math.exp(-((nx - 0.55) ** 2 + (ny - 0.4) ** 2) / 0.012) * 0.5;
-  return Math.min(1, tissue + spot);
-};
+const Label = ({ children }: { children: string }) => (
+  <p className="mb-4 font-mono text-[11px] uppercase tracking-[0.2em] text-indigo-200/70">{children}</p>
+);
 
-const PixelMatrix = ({ tech }: { tech: boolean }) => {
-  const size = 8;
-  return (
-    <div className="relative mx-auto grid aspect-square w-full max-w-[260px] grid-cols-8 overflow-hidden rounded-xl border border-white/10">
-      {Array.from({ length: size * size }, (_, i) => {
-        const x = i % size;
-        const y = Math.floor(i / size);
-        const v = pixel(x, y, size);
-        return (
-          <div
-            key={i}
-            className="relative grid place-items-center"
-            style={{ backgroundColor: `rgb(${v * 255} ${v * 255} ${v * 255})` }}
-          >
-            <span
-              className={`font-mono text-[8px] transition-opacity duration-300 ${tech ? "opacity-100" : "opacity-0"}`}
-              style={{ color: v > 0.5 ? "#0a0e1a" : "#cbd5e1" }}
-            >
-              {v.toFixed(2)}
-            </span>
-          </div>
-        );
-      })}
-      {/* Divisão em patches (4 × 4 → 2 × 2 patches visíveis aqui) */}
-      <div
-        className={`pointer-events-none absolute inset-0 grid grid-cols-2 grid-rows-2 transition-opacity duration-500 ${
-          tech ? "opacity-100" : "opacity-0"
-        }`}
-      >
-        {["P1", "P2", "P3", "P4"].map((p) => (
-          <div key={p} className="border border-cyan-300/80">
-            <span className="m-1 inline-block rounded bg-cyan-400 px-1 font-mono text-[9px] font-bold text-ink-950">{p}</span>
-          </div>
-        ))}
-      </div>
-    </div>
-  );
-};
-
-const ResultDemo = ({ tech }: { tech: boolean }) => {
+/** Exemplo ilustrativo: peso da balança × VGM declarado, com tolerância estourada. */
+const AlertDemo = ({ tech }: { tech: boolean }) => {
   const l = useLocalize();
   const { ref, inView } = useInView<HTMLDivElement>();
-  const scores = [
-    { label: l({ pt: "Normal", en: "Normal" }), value: 12, color: "from-emerald-400 to-cyan-300" },
-    { label: l({ pt: "Suspeito", en: "Suspicious" }), value: 88, color: "from-rose-500 to-orange-400" },
+  const bars = [
+    { label: l({ pt: "Balança", en: "Scale" }), value: 28.4, color: "from-rose-500 to-orange-400" },
+    { label: "VGM", value: 24.0, color: "from-emerald-400 to-cyan-300" },
   ];
 
   return (
-    <div ref={ref} className="grid gap-5 sm:grid-cols-[auto_1fr] sm:items-center">
-      {/* Mamografia sintética + mapa de calor */}
-      <div className="relative mx-auto aspect-[4/5] w-40 overflow-hidden rounded-xl border border-white/10 bg-black">
-        <div
-          className="absolute inset-0"
-          style={{
-            background:
-              "radial-gradient(ellipse 90% 70% at 0% 50%, rgb(210 210 210 / 0.85), rgb(120 120 120 / 0.5) 45%, transparent 75%), radial-gradient(ellipse 30% 20% at 35% 60%, rgb(255 255 255 / 0.25), transparent)",
-          }}
-        />
-        <div
-          className={`absolute h-20 w-20 -translate-x-1/2 -translate-y-1/2 rounded-full mix-blend-screen transition-opacity duration-1000 ${
-            inView ? "opacity-100" : "opacity-0"
-          }`}
-          style={{
-            left: "58%",
-            top: "40%",
-            background: "radial-gradient(circle, rgb(255 60 60 / 0.95), rgb(255 140 0 / 0.55) 40%, transparent 70%)",
-          }}
-        />
-        <div className="absolute left-[58%] top-[40%] h-6 w-6 -translate-x-1/2 -translate-y-1/2 animate-ping rounded-full border border-red-300/80" />
-        <span className="absolute bottom-1.5 left-1.5 rounded bg-black/60 px-1.5 py-0.5 font-mono text-[9px] text-slate-300">
-          {l({ pt: "exemplo", en: "example" })}
+    <div ref={ref} className="space-y-4">
+      <div className="flex items-center gap-2 rounded-xl border border-rose-400/30 bg-rose-500/10 px-3 py-2 text-sm text-rose-200">
+        <AlertTriangle size={16} className="shrink-0" />
+        {l({ pt: "Divergência acima da tolerância", en: "Divergence above tolerance" })}
+      </div>
+      {bars.map((bar) => (
+        <div key={bar.label}>
+          <div className="mb-1.5 flex justify-between text-sm">
+            <span className="flex items-center gap-2 text-slate-300">
+              <Scale size={13} className="text-slate-500" />
+              {bar.label}
+            </span>
+            <span className="font-mono text-white">{bar.value.toFixed(1).replace(".", l({ pt: ",", en: "." }))} t</span>
+          </div>
+          <div className="h-2 overflow-hidden rounded-full bg-white/[0.06]">
+            <div
+              className={`h-full rounded-full bg-linear-to-r ${bar.color} transition-[width] duration-[1400ms] ease-out`}
+              style={{ width: inView ? `${(bar.value / 30) * 100}%` : "0%" }}
+            />
+          </div>
+        </div>
+      ))}
+      <div className="flex gap-2">
+        <span className="inline-flex items-center gap-1.5 rounded-lg border border-emerald-400/30 bg-emerald-400/10 px-3 py-1.5 text-xs text-emerald-200">
+          <Check size={13} /> {l({ pt: "Confirmar", en: "Confirm" })}
+        </span>
+        <span className="inline-flex items-center gap-1.5 rounded-lg border border-white/10 bg-white/[0.04] px-3 py-1.5 text-xs text-slate-300">
+          <X size={13} /> {l({ pt: "Rejeitar", en: "Reject" })}
         </span>
       </div>
-
-      <div className="min-w-0 space-y-4">
-        {scores.map((score) => (
-          <div key={score.label}>
-            <div className="mb-1.5 flex justify-between text-sm">
-              <span className="text-slate-300">{score.label}</span>
-              <span className="font-mono text-white">{score.value}%</span>
-            </div>
-            <div className="h-2 overflow-hidden rounded-full bg-white/[0.06]">
-              <div
-                className={`h-full rounded-full bg-linear-to-r ${score.color} transition-[width] duration-[1400ms] ease-out`}
-                style={{ width: inView ? `${score.value}%` : "0%" }}
-              />
-            </div>
-          </div>
-        ))}
-        <p className="text-sm text-slate-400">
-          {l({ pt: "Região suspeita destacada no mapa de calor.", en: "Suspicious region highlighted on the heatmap." })}
-        </p>
-        <div
-          className={`grid transition-[grid-template-rows,opacity] duration-500 ${
-            tech ? "grid-rows-[1fr] opacity-100" : "grid-rows-[0fr] opacity-0"
-          }`}
-        >
-          <div className="overflow-hidden">
-            <pre className="overflow-x-auto whitespace-pre-wrap break-words rounded-lg border border-white/10 bg-ink-950/80 p-3 font-mono text-[11px] leading-relaxed text-cyan-100/80">
-{`softmax  → [0.12, 0.88]
-argmax   → "suspeito"
-heatmap  → attention rollout
-peak     → x = 643, y = 381`}
-            </pre>
-          </div>
+      <div
+        className={`grid transition-[grid-template-rows,opacity] duration-500 ${
+          tech ? "grid-rows-[1fr] opacity-100" : "grid-rows-[0fr] opacity-0"
+        }`}
+      >
+        <div className="overflow-hidden">
+          <pre className="overflow-x-auto whitespace-pre-wrap break-words rounded-lg border border-white/10 bg-ink-950/80 p-3 font-mono text-[11px] leading-relaxed text-cyan-100/80">
+{`balanca  = 28.4 t
+vgm      = 24.0 t
+delta    = 4.4 t  > tolerancia
+alerta   → aguarda decisao humana`}
+          </pre>
         </div>
       </div>
     </div>
@@ -185,8 +129,12 @@ export const TccSection = () => {
               {l(tcc.status)}
             </span>
             <h3 className="mt-4 max-w-3xl font-display text-2xl font-semibold leading-snug text-white md:text-4xl">
-              {l(tcc.title)}
+              {tcc.name}
             </h3>
+            <p className="mt-2 max-w-3xl text-lg text-slate-300">{l(tcc.title)}</p>
+            <p className="mt-3 font-mono text-[11px] text-slate-500">
+              {l(tcc.modality)} · {l({ pt: "Orientador", en: "Advisor" })}: {tcc.advisor}
+            </p>
           </div>
 
           <button
@@ -215,11 +163,44 @@ export const TccSection = () => {
 
         <LayeredText text={tcc.summary} tech={tech} className="max-w-3xl text-base md:text-lg" />
 
-        {/* Fluxo */}
+        {/* Ciclo da carga */}
         <p className="mb-4 mt-10 font-mono text-[11px] uppercase tracking-[0.2em] text-indigo-200/70">
-          {l({ pt: "Como funciona", en: "How it works" })}
+          {l({ pt: "O ciclo da carga", en: "The cargo cycle" })}
         </p>
-        <ol className="grid gap-3 lg:grid-cols-[repeat(5,minmax(0,1fr))]">
+        <ol className="grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
+          {tcc.cycle.map((stage, i) => (
+            <li key={i} className="min-w-0">
+              <Reveal delay={i * 70} className="h-full">
+                <div className="h-full rounded-2xl border border-white/[0.08] bg-ink-950/50 p-4">
+                  <span className="font-mono text-[10px] text-slate-500">0{i + 1}</span>
+                  <p className="font-display text-sm font-semibold text-white">{l(stage.title)}</p>
+                  <p className="mt-1.5 text-[13px] leading-relaxed text-slate-400">{l(stage.does)}</p>
+                  <p className="mt-2 font-mono text-[11px] text-cyan-200/70">
+                    {l({ pt: "Gera", en: "Generates" })}: {l(stage.generates)}
+                  </p>
+                </div>
+              </Reveal>
+            </li>
+          ))}
+        </ol>
+
+        {/* Problemas */}
+        <div className="mt-5 flex flex-wrap items-center gap-2">
+          <span className="mr-1 font-mono text-[11px] uppercase tracking-[0.2em] text-rose-200/70">
+            {l({ pt: "Problemas", en: "Problems" })}
+          </span>
+          {tcc.problems.map((problem, i) => (
+            <span key={i} className="rounded-md bg-rose-400/10 px-2.5 py-1 text-xs text-rose-100/90">
+              {l(problem)}
+            </span>
+          ))}
+        </div>
+
+        {/* Fluxo híbrido */}
+        <p className="mb-4 mt-10 font-mono text-[11px] uppercase tracking-[0.2em] text-indigo-200/70">
+          {l({ pt: "Como funciona a abordagem híbrida", en: "How the hybrid approach works" })}
+        </p>
+        <ol className="grid gap-3 lg:grid-cols-[repeat(4,minmax(0,1fr))]">
           {tcc.pipeline.map((step, i) => {
             const Icon = stepIcons[step.id];
             return (
@@ -248,25 +229,26 @@ export const TccSection = () => {
           })}
         </ol>
 
-        {/* Imagem como números + resultado */}
+        {/* Exemplo de alerta + por que importa */}
         <div className="mt-10 grid gap-5 lg:grid-cols-[minmax(0,1fr)_minmax(0,1fr)]">
           <div className="rounded-2xl border border-white/[0.08] bg-ink-950/50 p-6">
-            <p className="mb-4 font-mono text-[11px] uppercase tracking-[0.2em] text-indigo-200/70">
-              {l({ pt: "A imagem vira números", en: "The image becomes numbers" })}
-            </p>
-            <PixelMatrix tech={tech} />
-            <LayeredText text={tcc.imageAsNumbers} tech={tech} className="mt-5 text-sm" />
+            <Label>{l({ pt: "Um alerta na prática", en: "An alert in practice" })}</Label>
+            <AlertDemo tech={tech} />
+            <LayeredText text={tcc.alertExample} tech={tech} className="mt-5 text-sm" />
           </div>
           <div className="rounded-2xl border border-white/[0.08] bg-ink-950/50 p-6">
-            <p className="mb-4 font-mono text-[11px] uppercase tracking-[0.2em] text-indigo-200/70">
-              {l({ pt: "O resultado", en: "The result" })}
-            </p>
-            <ResultDemo tech={tech} />
-            <LayeredText text={tcc.whyItMatters} tech={tech} className="mt-5 text-sm" />
+            <Label>{l({ pt: "Por que importa", en: "Why it matters" })}</Label>
+            <LayeredText text={tcc.whyItMatters} tech={tech} className="text-sm" />
+            <div className="mt-6 rounded-xl border border-indigo-300/20 bg-indigo-400/[0.06] p-4">
+              <p className="mb-2 flex items-center gap-2 font-mono text-[11px] uppercase tracking-[0.2em] text-indigo-200">
+                <BrainCircuit size={14} /> {l({ pt: "Pergunta de pesquisa", en: "Research question" })}
+              </p>
+              <p className="text-sm leading-relaxed text-slate-200">{l(tcc.researchQuestion)}</p>
+            </div>
           </div>
         </div>
 
-        {/* Datasets (somente com detalhes técnicos) */}
+        {/* Detalhes técnicos: abordagens, escopo, objetivos e avaliação */}
         <div
           className={`grid transition-[grid-template-rows,opacity] duration-500 ${
             tech ? "grid-rows-[1fr] opacity-100" : "grid-rows-[0fr] opacity-0"
@@ -274,18 +256,68 @@ export const TccSection = () => {
           aria-hidden={!tech}
         >
           <div className="overflow-hidden">
-            <div className="mt-5 rounded-2xl border border-cyan-300/20 bg-cyan-400/[0.04] p-6">
-              <p className="mb-3 flex items-center gap-2 font-mono text-[11px] uppercase tracking-[0.2em] text-cyan-200">
-                <Database size={14} /> Datasets
-              </p>
-              <p className="mb-4 text-sm text-slate-300">{l(tcc.datasetNote)}</p>
-              <div className="flex flex-wrap gap-2">
-                {tcc.datasets.map((dataset) => (
-                  <span key={dataset.name} className="rounded-lg border border-white/10 bg-ink-950/60 px-3 py-1.5 text-xs">
-                    <span className="font-mono font-semibold text-white">{dataset.name}</span>
-                    <span className="text-slate-400"> · {l(dataset.note)}</span>
-                  </span>
-                ))}
+            <div className="mt-5 space-y-5 rounded-2xl border border-cyan-300/20 bg-cyan-400/[0.04] p-6">
+              <div>
+                <p className="mb-3 font-mono text-[11px] uppercase tracking-[0.2em] text-cyan-200">
+                  {l({ pt: "Por que híbrida", en: "Why hybrid" })}
+                </p>
+                <div className="grid gap-3 md:grid-cols-3">
+                  {tcc.approaches.map((a, i) => (
+                    <div key={i} className="rounded-xl border border-white/10 bg-ink-950/60 p-4 text-xs">
+                      <p className="font-display text-sm font-semibold text-white">{l(a.name)}</p>
+                      <p className="mt-2 text-emerald-200/80">+ {l(a.strength)}</p>
+                      <p className="mt-1 text-slate-400">– {l(a.limit)}</p>
+                    </div>
+                  ))}
+                </div>
+              </div>
+
+              <div className="grid gap-5 md:grid-cols-2">
+                <div>
+                  <p className="mb-2 font-mono text-[11px] uppercase tracking-[0.2em] text-cyan-200">
+                    {l({ pt: "Dentro do MVP", en: "Inside the MVP" })}
+                  </p>
+                  <ul className="space-y-1.5 text-sm text-slate-300">
+                    {tcc.scope.inside.map((item, i) => (
+                      <li key={i} className="flex gap-2">
+                        <Check size={14} className="mt-1 shrink-0 text-emerald-300" />
+                        {l(item)}
+                      </li>
+                    ))}
+                  </ul>
+                </div>
+                <div>
+                  <p className="mb-2 font-mono text-[11px] uppercase tracking-[0.2em] text-cyan-200">
+                    {l({ pt: "Fora do MVP", en: "Outside the MVP" })}
+                  </p>
+                  <ul className="space-y-1.5 text-sm text-slate-400">
+                    {tcc.scope.outside.map((item, i) => (
+                      <li key={i} className="flex gap-2">
+                        <X size={14} className="mt-1 shrink-0 text-slate-500" />
+                        {l(item)}
+                      </li>
+                    ))}
+                  </ul>
+                </div>
+              </div>
+
+              <div>
+                <p className="mb-2 font-mono text-[11px] uppercase tracking-[0.2em] text-cyan-200">
+                  {l({ pt: "Objetivos", en: "Objectives" })}
+                </p>
+                <p className="mb-3 text-sm text-slate-300">{l(tcc.objectives.general)}</p>
+                <ol className="list-inside list-decimal space-y-1 text-sm text-slate-400">
+                  {tcc.objectives.specific.map((item, i) => (
+                    <li key={i}>{l(item)}</li>
+                  ))}
+                </ol>
+              </div>
+
+              <div>
+                <p className="mb-2 font-mono text-[11px] uppercase tracking-[0.2em] text-cyan-200">
+                  {l({ pt: "Avaliação", en: "Evaluation" })}
+                </p>
+                <p className="text-sm text-slate-300">{l(tcc.evaluation)}</p>
               </div>
             </div>
           </div>
